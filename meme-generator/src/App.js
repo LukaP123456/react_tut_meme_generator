@@ -1,9 +1,14 @@
 import React from "react"
 
+import Header from "./Components/Header";
+import Meme from "./Components/Meme"
 
 function App() {
   return (
-      <h1>asdasd</h1>
+      <div>
+          <Header/>
+          <Meme/>
+      </div>
   );
 }
 

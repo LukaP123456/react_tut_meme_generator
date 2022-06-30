@@ -58,3 +58,7 @@ main{
     border: none;
     cursor: pointer;
 }
+
+.form--image{
+    max-width: 100%;
+}

@@ -1,46 +1,77 @@
 import React from "react";
-import memesData from "../memesData";
+// import memesData from "../memesData";
 
 export default function Meme() {
 
-   // const [memeImage,setImageUrl] = React.useState("https://i.imgflip.com/30b1gx.jpg")
+    // const [memeImage,setImageUrl] = React.useState("https://i.imgflip.com/30b1gx.jpg")
 
-    const [meme,setMeme] = React.useState({
+    const [meme, setMeme] = React.useState({
         topText: "",
         bottomText: "",
         imageUrl: "https://i.imgflip.com/30b1gx.jpg"
     })
 
-    const [allMemeImage, setAllMemeImages] = React.useState(memesData)
+    const [allMemes, setAllMemes] = React.useState([])
 
-    function getImage(){
-        const memesArray = allMemeImage.data.memes
-        const randomNumber = Math.floor(Math.random() * memesArray.length)
-        const url = memesArray[randomNumber].url;
+    React.useEffect(() => {
 
-        //TODO:Ne treba mi prethodna vrednost url koji je u ovom slucaju prazan string tkd ne radim ovako
-        // setImageUrl(memeImage => memeImage = url)
+        async function getMemes(){
+            const res = await fetch("https://api.imgflip.com/get_memes")
+            const data = await res.json()
+            setAllMemes(data.data.memes)
+        }
 
-        //TODO:Ovako odredjuem vrednost url
-        setMeme( prevMeme =>({
+        //TODO:Verzija koja nije async
+        // fetch("https://api.imgflip.com/get_memes")
+        //     .then(res => res.json())
+        //     .then(data => setAllMemes(data.data.memes))
+        getMemes()
+
+    }, [])
+
+
+    function getImage() {
+
+        const randomNumber = Math.floor(Math.random() * allMemes.length)
+        const url = allMemes[randomNumber].url;
+
+        setMeme(prevMeme => ({
             ...prevMeme,
             imageUrl: url
         }))
-
-        console.log(meme.imageUrl)
     }
 
-    function handleChange(event){
-        const {name,value} = event.target;
+    //Old getImage()
+    // function getImage(){
+    //     const memesArray = allMemes.data.memes
+    //     const randomNumber = Math.floor(Math.random() * memesArray.length)
+    //     const url = memesArray[randomNumber].url;
+    //
+    //     //TODO:Ne treba mi prethodna vrednost url koji je u ovom slucaju prazan string tkd ne radim ovako
+    //     // setImageUrl(memeImage => memeImage = url)
+    //
+    //     //TODO:Ovako odredjuem vrednost url
+    //     setMeme( prevMeme =>({
+    //         ...prevMeme,
+    //         imageUrl: url
+    //     }))
+    //
+    //     console.log(meme.imageUrl)
+    // }
 
-        setMeme( prevState => {
+
+
+
+    function handleChange(event) {
+        const {name, value} = event.target;
+
+        setMeme(prevState => {
             return {
                 ...prevState,
                 [name]: value
             }
         })
     }
-
 
     return (
         <main>
@@ -68,7 +99,7 @@ export default function Meme() {
                     Get a new meme image 🖼
                 </button>
             </div>
-            <div className={meme}>
+            <div className={"meme"}>
                 <img src={meme.imageUrl} className={'form--image'}/>
                 <h2 className={"meme--text top"}>{meme.topText}</h2>
                 <h2 className={"meme--text bottom"}>{meme.bottomText}</h2>
